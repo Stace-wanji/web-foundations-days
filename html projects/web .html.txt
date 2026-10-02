@@ -1,8 +1,0 @@
-<h1> Hello world i am header 1</h1>
-<h2> Hello world i am header 2</h2>
-<h3> Hello world i am header 3</h3>
-<h4> Hello world i am header 4</h4>
-<h5> Hello world i am header 5</h5>
-<h6> Hello world i am header 6</h6>
-<label for="nameName">Name:</label>
-<input type="text" id="name">
