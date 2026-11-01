@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Northstar Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2A4A;
+    --paper:#FBFAF7;
+    --amber:#E8A33D;
+    --amber-deep:#C9861F;
+    --sage:#4C7A6C;
+    --sage-deep:#3A5F54;
+    --slate:#5B6472;
+    --line:#DDD9D0;
+    --danger:#B3492B;
+    --radius:4px;
+    --display: 'Space Grotesk', system-ui, sans-serif;
+    --body: 'Inter', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--navy);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* focus visibility floor */
+  :focus-visible{
+    outline:2.5px solid var(--navy);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  .skip-link{
+    position:absolute; left:-999px; top:0;
+    background:var(--navy); color:#fff; padding:.6rem 1rem; z-index:100;
+  }
+  .skip-link:focus{ left:1rem; top:1rem; }
+
+  /* ---------- header / manifest ticker (signature element) ---------- */
+  header.bar{
+    border-bottom:1px solid var(--line);
+    background:#fff;
+    padding:.9rem 1.5rem;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem; flex-wrap:wrap;
+  }
+  .brand{
+    font-family:var(--mono); font-weight:600; font-size:.8rem;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--navy);
+  }
+  .ticker{
+    flex:1; max-width:340px; height:1px; background:var(--line);
+    position:relative; margin:0 1rem; min-width:120px;
+  }
+  .ticker .dot{
+    position:absolute; top:50%; left:0; width:7px; height:7px;
+    background:var(--amber); border-radius:50%; transform:translateY(-50%);
+    animation:travel 4.5s linear infinite;
+    box-shadow:0 0 0 3px rgba(232,163,61,.18);
+  }
+  @keyframes travel{
+    0%{ left:0; } 100%{ left:calc(100% - 7px); }
+  }
+  .status-label{
+    font-family:var(--mono); font-size:.72rem; color:var(--slate);
+    white-space:nowrap;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ticker .dot{ animation:none; left:50%; }
+  }
+
+  main{ max-width:920px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+
+  /* ---------- home view ---------- */
+  .hero h1{
+    font-family:var(--display); font-size:clamp(1.9rem,4vw,2.6rem);
+    font-weight:700; margin:0 0 .5rem; letter-spacing:-.01em;
+  }
+  .hero p.sub{ color:var(--slate); font-size:1.05rem; margin:0 0 2.5rem; max-width:46ch; }
+
+  .cards{
+    display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+  }
+  @media (max-width:640px){ .cards{ grid-template-columns:1fr; } }
+
+  .ticket{
+    position:relative; display:flex; background:#fff;
+    border:1px solid var(--line); border-radius:var(--radius);
+    text-align:left; padding:0; overflow:hidden; cursor:pointer;
+    width:100%; transition:box-shadow .18s ease, transform .18s ease;
+  }
+  .ticket:hover{ box-shadow:0 6px 20px rgba(27,42,74,.08); transform:translateY(-1px); }
+  .ticket .stub{
+    width:56px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    border-right:1.5px dashed var(--line); position:relative;
+  }
+  .ticket .stub::before, .ticket .stub::after{
+    content:''; position:absolute; width:14px; height:14px; background:var(--paper);
+    border-radius:50%; right:-7px;
+  }
+  .ticket .stub::before{ top:-7px; }
+  .ticket .stub::after{ bottom:-7px; }
+  .ticket.order .stub{ background:rgba(232,163,61,.12); }
+  .ticket.returns .stub{ background:rgba(76,122,108,.12); }
+  .ticket .stub svg{ width:22px; height:22px; }
+  .ticket.order .stub svg{ color:var(--amber-deep); }
+  .ticket.returns .stub svg{ color:var(--sage-deep); }
+
+  .ticket .body{ padding:1.4rem 1.5rem; }
+  .ticket h2{ font-family:var(--display); font-size:1.15rem; margin:0 0 .4rem; }
+  .ticket p{ color:var(--slate); font-size:.92rem; margin:0 0 1rem; }
+  .ticket .cta{
+    display:inline-flex; align-items:center; gap:.4rem;
+    font-family:var(--mono); font-size:.78rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .ticket.order .cta{ color:var(--amber-deep); }
+  .ticket.returns .cta{ color:var(--sage-deep); }
+
+  .fallback{ margin-top:2.25rem; font-size:.9rem; color:var(--slate); }
+  .fallback a{ text-decoration:underline; font-weight:500; }
+
+  /* ---------- sub-page shell ---------- */
+  .page-head{ display:flex; align-items:baseline; gap:.75rem; margin-bottom:1.75rem; }
+  .back-link{ font-family:var(--mono); font-size:.78rem; color:var(--slate); text-decoration:none; }
+  .back-link:hover{ text-decoration:underline; }
+  .page-head h1{ font-family:var(--display); font-size:1.6rem; margin:0; }
+
+  .panel{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:1.75rem; max-width:560px;
+  }
+  fieldset{ border:none; padding:0; margin:0 0 1.1rem; }
+  legend{ font-family:var(--mono); font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--slate); margin-bottom:.6rem; padding:0; }
+
+  label{ display:block; font-size:.85rem; font-weight:600; margin-bottom:.35rem; }
+  input[type=text], input[type=email], select{
+    width:100%; padding:.65rem .75rem; border:1px solid var(--line); border-radius:var(--radius);
+    font-family:var(--body); font-size:.95rem; background:#fff; color:var(--navy);
+    margin-bottom:1rem;
+  }
+  input[type=text]#orderId, input#orderIdReturn{ font-family:var(--mono); letter-spacing:.02em; }
+  .hint{ font-size:.78rem; color:var(--slate); margin:-0.7rem 0 1rem; }
+  .radio-row{ display:flex; gap:1.25rem; margin-bottom:1rem; }
+  .radio-row label{ font-weight:500; display:flex; align-items:center; gap:.4rem; margin-bottom:0; }
+
+  .submit-btn{
+    background:var(--navy); color:#fff; border:none; border-radius:var(--radius);
+    padding:.75rem 1.4rem; font-size:.92rem; font-weight:600; cursor:pointer;
+    width:100%;
+  }
+  .submit-btn:disabled{ opacity:.6; cursor:progress; }
+  .submit-btn:hover:not(:disabled){ background:#233a63; }
+
+  .status-region{ margin-top:1.25rem; font-size:.9rem; }
+  .status-region[data-state="retrying"]{ color:var(--amber-deep); }
+  .status-region[data-state="error"]{ color:var(--danger); }
+  .status-region[data-state="success"]{ color:var(--sage-deep); }
+
+  .result-card{
+    margin-top:1.25rem; border:1px solid var(--line); border-radius:var(--radius);
+    padding:1.25rem; background:#fbfbf9;
+  }
+  .result-card h3{ font-family:var(--display); font-size:1rem; margin:0 0 .75rem; }
+  .track-steps{ list-style:none; padding:0; margin:0; display:flex; justify-content:space-between; }
+  .track-steps li{ flex:1; text-align:center; font-size:.72rem; color:var(--line); position:relative; }
+  .track-steps li::before{
+    content:''; display:block; width:10px; height:10px; border-radius:50%;
+    background:var(--line); margin:0 auto .4rem;
+  }
+  .track-steps li.done{ color:var(--sage-deep); }
+  .track-steps li.done::before{ background:var(--sage-deep); }
+  .track-steps li.current{ color:var(--amber-deep); font-weight:600; }
+  .track-steps li.current::before{ background:var(--amber-deep); box-shadow:0 0 0 3px rgba(232,163,61,.2); }
+  .ref-code{ font-family:var(--mono); background:#fff; border:1px dashed var(--line); padding:.15rem .5rem; border-radius:3px; }
+
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+  }
+  footer{ text-align:center; color:var(--slate); font-size:.78rem; padding:2rem 0 1rem; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="bar">
+  <span class="brand">Northstar Support</span>
+  <div class="ticker" aria-hidden="true"><span class="dot"></span></div>
+  <span class="status-label" id="systemsStatus">Systems: normal</span>
+</header>
+
+<main id="main" tabindex="-1"></main>
+
+<footer>Northstar Retail Co. · Support Deflection MVP</footer>
+
+<script>
+/* =========================================================
+   ANALYTICS — deflection tracking (Step 4 of the exec plan)
+   ========================================================= */
+function track(event, props){
+  console.log('[analytics]', event, props || {});
+}
+
+/* =========================================================
+   RETRY / BACKOFF — the tool the Day 4 pivot required.
+   Exponential backoff with jitter, capped attempts, and a
+   hard rule the Day 1-2 prototype got wrong at first:
+   only retry TRANSIENT failures, never validation failures
+   (e.g. "order not found" should fail once, not retry 3x).
+   ========================================================= */
+class NonRetryableError extends Error {}
+
+async function withRetryBackoff(fn, { retries = 3, baseDelayMs = 400, onRetry } = {}) {
+  let attempt = 0;
+  while (true) {
+    try {
+      return await fn(attempt);
+    } catch (err) {
+      if (err instanceof NonRetryableError || attempt >= retries) {
+        throw err;
+      }
+      const backoff = baseDelayMs * Math.pow(2, attempt);
+      const jitter = Math.random() * baseDelayMs;
+      const delay = backoff + jitter;
+      attempt += 1;
+      if (onRetry) onRetry(attempt, delay);
+      await new Promise(res => setTimeout(res, delay));
+    }
+  }
+}
+
+/* Simulated flaky backend — fails transiently ~40% of the time
+   (this is what the Day 4 pivot notice described happening for
+   real ahead of a traffic spike), and fails HARD (non-retryable)
+   if the order id doesn't match the known demo record. */
+function simulateOrderLookup(orderId, contact) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (orderId.trim().toUpperCase() !== 'NR-10294') {
+        reject(new NonRetryableError('Order not found'));
+        return;
+      }
+      if (Math.random() < 0.4) {
+        reject(new Error('Network hiccup')); // transient, retryable
+        return;
+      }
+      resolve({
+        orderId: 'NR-10294',
+        item: 'Trail Runner Jacket — Slate, M',
+        step: 'shipped',
+        eta: 'Aug 25',
+      });
+    }, 500);
+  });
+}
+
+function simulateReturnSubmit(orderId, reason) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (orderId.trim().toUpperCase() !== 'NR-10294') {
+        reject(new NonRetryableError('Order not found'));
+        return;
+      }
+      if (Math.random() < 0.4) {
+        reject(new Error('Network hiccup'));
+        return;
+      }
+      resolve({ referenceId: 'RTN-' + Math.floor(1000 + Math.random() * 9000) });
+    }, 500);
+  });
+}
+
+/* =========================================================
+   ROUTER — hash-based, matches the Step 1 route plan:
+   /support, /support/order-status, /support/returns-refunds
+   ========================================================= */
+const routes = {
+  '#/support': renderHome,
+  '#/support/order-status': renderOrderStatus,
+  '#/support/returns-refunds': renderReturns,
+};
+
+function navigate(hash){ window.location.hash = hash; }
+
+function router(){
+  const hash = window.location.hash || '#/support';
+  const render = routes[hash] || renderHome;
+  render();
+  const main = document.getElementById('main');
+  main.focus();
+}
+window.addEventListener('hashchange', router);
+window.addEventListener('DOMContentLoaded', router);
+
+/* ---------------- HOME ---------------- */
+function renderHome(){
+  document.title = 'Support · Northstar';
+  document.getElementById('main').innerHTML = `
+    <div class="hero">
+      <h1>How can we help you today?</h1>
+      <p class="sub">Select a topic below to resolve your issue instantly.</p>
+    </div>
+    <div class="cards">
+      <button class="ticket order" id="cardOrder" aria-describedby="descOrder">
+        <span class="stub" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
+        </span>
+        <span class="body">
+          <h2>Track or View Order</h2>
+          <p id="descOrder">Check real-time shipping status, view item details or get delivery updates.</p>
+          <span class="cta">Check Order Status →</span>
+        </span>
+      </button>
+      <button class="ticket returns" id="cardReturns" aria-describedby="descReturns">
+        <span class="stub" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v6h6"/><path d="M20 20a8 8 0 1 0-2.34-5.66L4 14"/></svg>
+        </span>
+        <span class="body">
+          <h2>Start a Return or Refund</h2>
+          <p id="descReturns">Initiate a return, request a replacement, or check your refund status.</p>
+          <span class="cta">Start Return →</span>
+        </span>
+      </button>
+    </div>
+    <p class="fallback">Looking for something else? <a href="#" id="contactFallback">Contact Support</a></p>
+  `;
+
+  document.getElementById('cardOrder').addEventListener('click', () => {
+    track('support_entry_selected', { category: 'order_status' });
+    navigate('#/support/order-status');
+  });
+  document.getElementById('cardReturns').addEventListener('click', () => {
+    track('support_entry_selected', { category: 'returns_refunds' });
+    navigate('#/support/returns-refunds');
+  });
+  document.getElementById('contactFallback').addEventListener('click', (e) => {
+    e.preventDefault();
+    track('support_fallback_clicked', { category: 'contact_support' });
+    alert('This would route to live chat / email support (outside MVP scope).');
+  });
+}
+
+/* ---------------- ORDER STATUS ---------------- */
+function renderOrderStatus(){
+  document.title = 'Order Status · Northstar Support';
+  document.getElementById('main').innerHTML = `
+    <div class="page-head">
+      <a href="#/support" class="back-link">← Support</a>
+      <h1>Track or View Order</h1>
+    </div>
+    <div class="panel">
+      <form id="orderForm" novalidate>
+        <fieldset>
+          <legend>Verify your order</legend>
+          <label for="orderId">Order number</label>
+          <input type="text" id="orderId" placeholder="NR-10294" aria-describedby="orderIdHint" required />
+          <p class="hint" id="orderIdHint">Try demo order <span class="ref-code">NR-10294</span></p>
+
+          <label for="contact">Email or zip code</label>
+          <input type="text" id="contact" placeholder="you@email.com or 94103" required />
+        </fieldset>
+        <button type="submit" class="submit-btn" id="orderSubmit">Check Order Status</button>
+      </form>
+      <div class="status-region" id="orderStatusRegion" role="status" aria-live="polite"></div>
+      <div id="orderResult"></div>
+    </div>
+  `;
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const orderId = document.getElementById('orderId').value;
+    const contact = document.getElementById('contact').value;
+    const btn = document.getElementById('orderSubmit');
+    const statusEl = document.getElementById('orderStatusRegion');
+    const resultEl = document.getElementById('orderResult');
+
+    track('support_lookup_submitted', { category: 'order_status' });
+    btn.disabled = true;
+    resultEl.innerHTML = '';
+    statusEl.dataset.state = 'loading';
+    statusEl.textContent = 'Checking order status…';
+
+    try {
+      const data = await withRetryBackoff(
+        () => simulateOrderLookup(orderId, contact),
+        {
+          retries: 3,
+          baseDelayMs: 500,
+          onRetry: (attempt, delay) => {
+            track('support_lookup_retry', { category: 'order_status', attempt });
+            statusEl.dataset.state = 'retrying';
+            statusEl.textContent = `Connection hiccup — retrying (${attempt}/3)…`;
+          },
+        }
+      );
+      statusEl.dataset.state = 'success';
+      statusEl.textContent = 'Order found.';
+      track('support_lookup_success', { category: 'order_status' });
+      resultEl.innerHTML = renderTrackingCard(data);
+    } catch (err) {
+      statusEl.dataset.state = 'error';
+      statusEl.textContent = err.message === 'Order not found'
+        ? 'We couldn\u2019t find that order. Double-check the order number and try again.'
+        : 'We\u2019re having trouble reaching order status right now. Please try again shortly.';
+      track('support_lookup_failed', { category: 'order_status', reason: err.message });
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+function renderTrackingCard(data){
+  const steps = ['ordered', 'shipped', 'out_for_delivery', 'delivered'];
+  const labels = { ordered: 'Ordered', shipped: 'Shipped', out_for_delivery: 'Out for delivery', delivered: 'Delivered' };
+  const currentIndex = steps.indexOf(data.step === 'shipped' ? 'shipped' : data.step);
+  const li = steps.map((s, i) => {
+    const cls = i < currentIndex ? 'done' : i === currentIndex ? 'current' : '';
+    return `<li class="${cls}">${labels[s]}</li>`;
+  }).join('');
+  return `
+    <div class="result-card">
+      <h3>${data.orderId}</h3>
+      <p style="margin:0 0 1rem;color:var(--slate);font-size:.9rem;">${data.item} · Est. delivery <strong>${data.eta}</strong></p>
+      <ul class="track-steps">${li}</ul>
+    </div>
+  `;
+}
+
+/* ---------------- RETURNS & REFUNDS ---------------- */
+function renderReturns(){
+  document.title = 'Returns & Refunds · Northstar Support';
+  document.getElementById('main').innerHTML = `
+    <div class="page-head">
+      <a href="#/support" class="back-link">← Support</a>
+      <h1>Start a Return or Refund</h1>
+    </div>
+    <div class="panel">
+      <form id="returnForm" novalidate>
+        <fieldset>
+          <legend>Return details</legend>
+          <label for="orderIdReturn">Order number</label>
+          <input type="text" id="orderIdReturn" placeholder="NR-10294" aria-describedby="returnIdHint" required />
+          <p class="hint" id="returnIdHint">Try demo order <span class="ref-code">NR-10294</span></p>
+
+          <label for="reason">Reason for return</label>
+          <select id="reason" required>
+            <option value="">Select a reason…</option>
+            <option>Wrong item received</option>
+            <option>Item damaged or defective</option>
+            <option>No longer needed</option>
+            <option>Item didn't match description</option>
+            <option>Other</option>
+          </select>
+        </fieldset>
+        <button type="submit" class="submit-btn" id="returnSubmit">Start Return</button>
+      </form>
+      <div class="status-region" id="returnStatusRegion" role="status" aria-live="polite"></div>
+      <div id="returnResult"></div>
+    </div>
+  `;
+
+  document.getElementById('returnForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const orderId = document.getElementById('orderIdReturn').value;
+    const reason = document.getElementById('reason').value;
+    const btn = document.getElementById('returnSubmit');
+    const statusEl = document.getElementById('returnStatusRegion');
+    const resultEl = document.getElementById('returnResult');
+
+    track('support_return_submitted', { category: 'returns_refunds', reason });
+    btn.disabled = true;
+    resultEl.innerHTML = '';
+    statusEl.dataset.state = 'loading';
+    statusEl.textContent = 'Submitting your return request…';
+
+    try {
+      const data = await withRetryBackoff(
+        () => simulateReturnSubmit(orderId, reason),
+        {
+          retries: 3,
+          baseDelayMs: 500,
+          onRetry: (attempt, delay) => {
+            track('support_return_retry', { category: 'returns_refunds', attempt });
+            statusEl.dataset.state = 'retrying';
+            statusEl.textContent = `Connection hiccup — retrying (${attempt}/3)…`;
+          },
+        }
+      );
+      statusEl.dataset.state = 'success';
+      statusEl.textContent = 'Return request received.';
+      track('support_return_success', { category: 'returns_refunds' });
+      resultEl.innerHTML = `
+        <div class="result-card">
+          <h3>Reference <span class="ref-code">${data.referenceId}</span></h3>
+          <p style="margin:0;color:var(--slate);font-size:.9rem;">
+            We'll email return instructions within 24 hours. Refunds post 3–5 business
+            days after the item is received.
+          </p>
+        </div>
+      `;
+    } catch (err) {
+      statusEl.dataset.state = 'error';
+      statusEl.textContent = err.message === 'Order not found'
+        ? 'We couldn\u2019t find that order. Double-check the order number and try again.'
+        : 'We\u2019re having trouble submitting this right now. Please try again shortly.';
+      track('support_return_failed', { category: 'returns_refunds', reason: err.message });
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+Setting environment for using XAMPP for Windows.
+Hp@DESKTOP-EMRO98Q c:\xampp
+# mysql.exe -u root --password
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE USER 'stacey'@'localhost'IDENTIFIED BY '2345';
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
+| trees              |
++--------------------+
+6 rows in set (0.067 sec)
+
+
+MariaDB [(none)]> CREATE DATABASE VISIT;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
+| trees              |
+| visit              |
++--------------------+
+7 rows in set (0.001 sec)
+
+MariaDB [(none)]> USE VISIT;
+Database changed
+MariaDB [VISIT]> CREATE TABLE CAREGIVER(
+    -> CaregiverID INT(10) NOT NULL PRIMARY KEY,
+    -> Firstname Varchar(50),
+    -> Lastname Varchar(50),
+    -> Contact Varchar(20),
+    -> AssignmentArea Varchar(70),
+    -> Availability  Enum('Available','Unavailable','Busy')
+    -> );
+Query OK, 0 rows affected (0.028 sec)
+
+MariaDB [VISIT]> SELECT * FROM CAREGIVER;
+Empty set (0.069 sec)
+
+MariaDB [VISIT]> INSERT INTO CAREGIVER () Values('209','Elizabeth','Mwania','+254783548570','Green Eastwing','Available'),
+    -> ('231','Joseph','Nganga','+254735583947','Blue Eastwing','Unavailable'),
+    -> ('228','Felicity','Wanjiru','+254745572844','Green Northwing','Busy'),
+    -> ('245','Collins','Mwangi','+254765485647','Blue Southwing','Available'),
+    -> ('210','Marylynn','Gachoka','+254763542839','Red Eastwing','Unavailable');
+Query OK, 5 rows affected (0.016 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [VISIT]> CREATE TABLE SOCIALWORKER(
+    -> SocialWorkerID INT (10) NOT NULL PRIMARY KEY,
+    -> FirstName Varchar (50),
+    -> LastName Varchar (50),
+    -> Contact Varchar (20),
+    -> AssignedArea Varchar (80)
+    -> );
+Query OK, 0 rows affected (0.021 sec)
+
+MariaDB [VISIT]> SELECT* FROM SOCIALWORKER;
+Empty set (0.008 sec)
+MariaDB [VISIT]> INSERT INTO SOCIALWORKER () VALUES ('543','Christabel','Wamwaris','+254758466730','Blue Eastwing'),
+    -> ('453','Mark','Kioko','+254735749578','Green Westwing'),
+    -> ('564','Jasmine','Akinyi','+254756453749','Blue Northwing'),
+    -> ('234','Josphat','Mutiso','+254746573899','Green Southwing'),
+    -> ('457','Agness','Nyawira','+254785632850','Blue Southwing' );
+Query OK, 5 rows affected (0.015 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [VISIT]> CREATE TABLE SupportItem (
+    -> ItemID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    -> ItemName Varchar (100),
+    -> Quantity Varchar (50),
+    -> DateIssued Date
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [VISIT]> SELECT * FROM SupportItem;
+Empty set (0.010 sec)
+
+MariaDB [VISIT]> INSERT INTO SupportItem () Values ('1','Pressure Monitor','4','2025-02-22'),
+    -> ('2','Adult Diapers','20 packs','2025-06-26'),
+    -> ('3','Walking Stick','6','2025-04-24'),
+    -> ('4','Basins','10','2025-04-24'),
+    -> ('5','Pain Killers','5pckts','2025-05-15' );
+Query OK, 5 rows affected (0.003 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+MariaDB [VISIT]> CREATE TABLE ELDERLY(
+    -> ElderlyID INT (10) NOT NULL PRIMARY KEY,
+    -> FirstName Varchar (50),
+    -> Lastname Varchar (50),
+    -> Age INT (50),
+    -> Gender Enum ('Male','Female'),
+    -> Address Varchar (100),
+    -> Contact Varchar (20),
+    -> Healthcondition Varchar (50),
+    -> NextofKinID INT (10),
+    -> SocialworkerID INT (10)
+    -> );
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [VISIT]> SELECT * FROM ELDERLY;
+Empty set (0.021 sec)
+
+MariaDB [VISIT]> INSERT INTO ELDERLY () Values ('15','Serah','Wakiuru','75','Female','Thika,Makongeni Phase10','+254756483496','Asthma','7587','543'),
+    -> ('23','Eugene','Wakiama','70','Male','Kiambu,karuri Estate','+254784557389','Diabetes Type I','9865','453'),
+    -> ('10','Beatrice','Akinyi','80','Female','Nairobi,Imaara Daima','+254756784987','Hearing Condition','9867','564'),
+    -> ('34','Hussein','Budha','78','Male','Garrisa,Jarajila Area','+254765869494','Heart Condition','3426','234'),
+    -> ('25','Suhura','Njoki','86','Female','Eldoret,Langos Estate','+254764597390','Arthritis','9768','457' );
+Query OK, 5 rows affected (0.017 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [VISIT]> CREATE TABLE VISIT(
+    -> VisitID INT (10) NOT NULL PRIMARY KEY,
+    -> VisitDate Date,
+    -> Remarks Varchar (20),
+    -> CaregiverID INT (10),
+    -> SocialWorkerID INT (10),
+    -> ElderlyID INT (10)
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [VISIT]> SELECT * FROM VISIT;
+Empty set (0.004 sec)
+
+
+MariaDB [VISIT]> INSERT INTO VISIT () Values('8878','2025-05-23','Discussed diet and hydration','209','543','15'),
+    -> ('6656','2025-05-20','Medication Taken','231','453','23'),
+    -> ('5534','2025-04-13','Vital signs with normal range','228','564','10'),
+    -> ('4465','2025-03-30','Normal Heart Rate','245','234','34'),
+    -> ('7798','2025-07-14','Family Updated on progress','210','457','25' );
+Query OK, 5 rows affected, 3 warnings (0.004 sec)
+Records: 5  Duplicates: 0  Warnings: 3
+
+MariaDB [VISIT]> SELECT * FROM CAREGIVER;
++-------------+-----------+----------+---------------+-----------------+--------------+
+| CaregiverID | Firstname | Lastname | Contact       | AssignmentArea  | Availability |
++-------------+-----------+----------+---------------+-----------------+--------------+
+|         209 | Elizabeth | Mwania   | +254783548570 | Green Eastwing  | Available    |
+|         210 | Marylynn  | Gachoka  | +254763542839 | Red Eastwing    | Unavailable  |
+|         228 | Felicity  | Wanjiru  | +254745572844 | Green Northwing | Busy         |
+|         231 | Joseph    | Nganga   | +254735583947 | Blue Eastwing   | Unavailable  |
+|         245 | Collins   | Mwangi   | +254765485647 | Blue Southwing  | Available    |
++-------------+-----------+----------+---------------+-----------------+--------------+
+5 rows in set (0.002 sec)
+
+MariaDB [VISIT]> SELECT * FROM ELDERLY;
++-----------+-----------+----------+------+--------+-------------------------+---------------+-------------------+-------------+----------------+
+| ElderlyID | FirstName | Lastname | Age  | Gender | Address                 | Contact       | Healthcondition   | NextofKinID | SocialworkerID |
++-----------+-----------+----------+------+--------+-------------------------+---------------+-------------------+-------------+----------------+
+|        10 | Beatrice  | Akinyi   |   80 | Female | Nairobi,Imaara Daima    | +254756784987 | Hearing Condition |        9867 |            564 |
+|        15 | Serah     | Wakiuru  |   75 | Female | Thika,Makongeni Phase10 | +254756483496 | Asthma            |        7587 |            543 |
+|        23 | Eugene    | Wakiama  |   70 | Male   | Kiambu,karuri Estate    | +254784557389 | Diabetes Type I   |        9865 |            453 |
+|        25 | Suhura    | Njoki    |   86 | Female | Eldoret,Langos Estate   | +254764597390 | Arthritis         |        9768 |            457 |
+|        34 | Hussein   | Budha    |   78 | Male   | Garrisa,Jarajila Area   | +254765869494 | Heart Condition   |        3426 |            234 |
++-----------+-----------+----------+------+--------+-------------------------+---------------+-------------------+-------------+----------------+
+5 rows in set (0.004 sec)
+
+MariaDB [VISIT]> SELECT *FROM SOCIALWORKER;
++----------------+------------+----------+---------------+-----------------+
+| SocialWorkerID | FirstName  | LastName | Contact       | AssignedArea    |
++----------------+------------+----------+---------------+-----------------+
+|            234 | Josphat    | Mutiso   | +254746573899 | Green Southwing |
+|            453 | Mark       | Kioko    | +254735749578 | Green Westwing  |
+|            457 | Agness     | Nyawira  | +254785632850 | Blue Southwing  |
+|            543 | Christabel | Wamwaris | +254758466730 | Blue Eastwing   |
+|            564 | Jasmine    | Akinyi   | +254756453749 | Blue Northwing  |
++----------------+------------+----------+---------------+-----------------+
+5 rows in set (0.005 sec)
+
+MariaDB [VISIT]> SELECT * FROM SupportItem;
++--------+------------------+----------+------------+
+| ItemID | ItemName         | Quantity | DateIssued |
++--------+------------------+----------+------------+
+|      1 | Pressure Monitor | 4        | 2025-02-22 |
+|      2 | Adult Diapers    | 20 packs | 2025-06-26 |
+|      3 | Walking Stick    | 6        | 2025-04-24 |
+|      4 | Basins           | 10       | 2025-04-24 |
+|      5 | Pain Killers     | 5pckts   | 2025-05-15 |
++--------+------------------+----------+------------+
+5 rows in set (0.004 sec)
+
+MariaDB [VISIT]> SELECT * FROM VISIT;
++---------+------------+----------------------+-------------+----------------+-----------+
+| VisitID | VisitDate  | Remarks              | CaregiverID | SocialWorkerID | ElderlyID |
++---------+------------+----------------------+-------------+----------------+-----------+
+|    4465 | 2025-03-30 | Normal Heart Rate    |         245 |            234 |        34 |
+|    5534 | 2025-04-13 | Vital signs with nor |         228 |            564 |        10 |
+|    6656 | 2025-05-20 | Medication Taken     |         231 |            453 |        23 |
+|    7798 | 2025-07-14 | Family Updated on pr |         210 |            457 |        25 |
+|    8878 | 2025-05-23 | Discussed diet and h |         209 |            543 |        15 |
++---------+------------+----------------------+-------------+----------------+-----------+
+5 rows in set (0.002 sec)
+

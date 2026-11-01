@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>hello</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section>
+        <h1>Hero Section</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          quod.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>Footer</p>
+    </footer>
+  </body>
+</html>
