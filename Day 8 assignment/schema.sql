@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS events (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    event_date TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS seats (
+    id SERIAL PRIMARY KEY,
+    event_id INT REFERENCES events(id),
+    seat_number VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'AVAILABLE', -- AVAILABLE, HELD, BOOKED
+    version INT DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    seat_id INT UNIQUE REFERENCES seats(id),
+    amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'CONFIRMED',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
